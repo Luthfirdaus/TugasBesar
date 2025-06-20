@@ -1,44 +1,44 @@
-from flask import Flask, render_template, jsonify, request
+import sys
+import json
+from http.server import BaseHTTPRequestHandler
 
-# Penting: template_folder disesuaikan karena index.py di /api
-app = Flask(__name__, static_url_path="/static", template_folder="../templates")
+# ⚠️ Pastikan ini class yang kamu definisikan sendiri
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Hello from MyHandler!")
 
-# Data kelembapan disimpan sementara di memori
-data_sensor = []
-mode = {"auto": False, "manual": False}
-max_data = 20
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+def handler(request):
+    """
+    Fungsi utama Vercel untuk menangani HTTP request
+    """
+    try:
+        # Kamu bisa ambil class name dari query atau request, misal:
+        class_name = "MyHandler"  # bisa kamu ubah dinamis jika mau
+        base = globals().get(class_name)
 
-@app.route("/api/data", methods=["GET", "POST"])
-def api_data():
-    global data_sensor
-    if request.method == "POST":
-        try:
-            json_data = request.get_json(force=True)
-            nilai = int(json_data.get("moisture", 0))
-            data_sensor.append(nilai)
-            if len(data_sensor) > max_data:
-                data_sensor.pop(0)
-            return jsonify({"status": "ok"})
-        except Exception as e:
-            return jsonify({"status": "error", "msg": str(e)}), 500
-    return jsonify({"data": data_sensor})
+        # ✅ Pastikan base adalah class dan subclass dari BaseHTTPRequestHandler
+        if not (isinstance(base, type) and issubclass(base, BaseHTTPRequestHandler)):
+            raise TypeError(f"{class_name} is not a valid handler class")
 
-@app.route("/api/status", methods=["GET", "POST"])
-def api_status():
-    global mode
-    if request.method == "POST":
-        try:
-            json_data = request.get_json(force=True)
-            mode["auto"] = json_data.get("auto", False)
-            mode["manual"] = json_data.get("manual", False)
-            return jsonify({"status": "updated"})
-        except Exception as e:
-            return jsonify({"status": "error", "msg": str(e)}), 500
-    return jsonify(mode)
+        # Simulasikan penggunaan handler untuk balasan
+        response_body = {
+            "message": f"Handler {class_name} aktif",
+            "status": "success"
+        }
 
-# Ini WAJIB agar bisa dipanggil sebagai serverless function di Vercel
-handler = app
+        return {
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps(response_body)
+        }
+
+    except Exception as e:
+        # Tangani error dengan log dan respon error
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": str(e)})
+        }
