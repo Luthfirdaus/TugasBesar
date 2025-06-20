@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penyiram Tanah IoT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Penyiram Tanah Berbasis IoT</h2>
+        <p id="wateringStatus" style="text-align:center; font-weight:bold; color:#f0f0f0;">Sedang Menyiram</p>
+        <p>Kelembapan Tanah Saat Ini : <span id="currentMoisture">-</span>%</p>
+        <canvas id="moistureChart" height="200"></canvas>
+        <div class="controls">
+            <label><input type="checkbox" id="autoMode"> Penyiraman Otomatis</label>
+            <label><input type="checkbox" id="manualMode"> Penyiraman Manual</label>
+            <div class="threshold">
+                Threshold Kelembapan: <span id="thresholdValue">40</span>%
+                <button onclick="changeThreshold(1)">▲</button>
+                <button onclick="changeThreshold(-1)">▼</button>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

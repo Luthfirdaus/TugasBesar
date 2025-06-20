@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.container {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 400px;
+}
+
+h2 {
+    text-align: center;
+}
+
+canvas {
+    max-width: 100%;
+}
+
+.controls {
+    margin-top: 20px;
+}
+
+.controls label {
+    display: block;
+    margin: 5px 0;
+}
+
+.threshold {
+    margin-top: 10px;
+}
+
+.threshold button {
+    margin: 0 5px;
+}
